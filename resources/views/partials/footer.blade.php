@@ -4,7 +4,7 @@
             Copyright © {{ date('Y') }} <a href="" target="_blank">Condoflow</a>. Todos os direitos reservados.
         </span>
         <span class="text-muted float-none float-sm-end d-block mt-1 mt-sm-0 text-center">
-            Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i>
+            made with <i class="mdi mdi-heart text-danger"></i>
         </span>
     </div>
 </footer>
