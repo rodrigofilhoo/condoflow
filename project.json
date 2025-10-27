@@ -1,0 +1,6 @@
+{
+  "projectType": "laravel",
+  "buildCommand": "npm run build",
+  "outputDirectory": "public",
+  "installCommand": "npm ci"
+}

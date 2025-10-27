@@ -1,0 +1,24 @@
+/* Estilos personalizados para corrigir layout */
+
+/* Garante que o conteúdo principal preencha o espaço disponível */
+.main-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Garante que as páginas com pouco conteúdo ainda preencham o espaço */
+.content-wrapper .row:only-child {
+    flex-grow: 1;
+}
+
+/* Ajusta o footer para sempre ficar no final */
+.footer {
+    margin-top: auto;
+}

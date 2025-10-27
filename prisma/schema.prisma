@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model agendamentos_recursos {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model blocos {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome          String      @db.VarChar(255)
+  condominio_id String      @db.Uuid
+  total_andares Int?
+  condominios   condominios @relation(fields: [condominio_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "blocos_condominio_id_foreign")
+  imoveis       imoveis[]
+}
+
+model cache {
+  key        String @id @db.VarChar(255)
+  value      String
+  expiration Int
+}
+
+model cache_locks {
+  key        String @id @db.VarChar(255)
+  owner      String @db.VarChar(255)
+  expiration Int
+}
+
+model condominios {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome               String    @db.VarChar(255)
+  endereco           String
+  numero             Int?
+  bairro             String?   @db.VarChar(255)
+  cep                String?   @db.VarChar(255)
+  cidade             String    @db.VarChar(255)
+  estado             String    @db.VarChar(255)
+  cnpj               String?   @db.VarChar(255)
+  inscricao_estadual String?   @db.VarChar(255)
+  blocos             blocos[]
+  imoveis            imoveis[]
+}
+
+model contratos_locacao {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model funcionarios {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model grupos {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome      String     @db.VarChar(255)
+  descricao String?
+  usuarios  usuarios[]
+}
+
+model imobiliarias {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome     String  @db.VarChar(255)
+  cnpj     String? @db.VarChar(255)
+  telefone String? @db.VarChar(255)
+  email    String? @db.VarChar(255)
+  endereco String?
+  ativo    Boolean @default(true)
+}
+
+model imoveis {
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id   String      @db.Uuid
+  bloco_id        String?     @db.Uuid
+  numero          String      @db.VarChar(255)
+  andar           Int?
+  tipo            String?     @db.VarChar(255)
+  area_m2         Decimal?    @db.Decimal(10, 2)
+  qtde_vagas      Int         @default(0)
+  proprietario_id String?     @db.Uuid
+  status_locacao  String      @default("DISPONIVEL") @db.VarChar(255)
+  created_at      DateTime?   @default(dbgenerated("'2025-08-07 17:12:14+00'::timestamp with time zone")) @db.Timestamptz(0)
+  updated_at      DateTime?   @db.Timestamptz(0)
+  blocos          blocos?     @relation(fields: [bloco_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "imoveis_bloco_id_foreign")
+  condominios     condominios @relation(fields: [condominio_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "imoveis_condominio_id_foreign")
+  usuarios        usuarios?   @relation(fields: [proprietario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "imoveis_proprietario_id_foreign")
+}
+
+model logs_sistema {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement())
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+model multas {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model ocorrencias {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model pessoa_imovel {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model recursos_condominio {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome       String    @db.VarChar(255)
+  tipo       String?   @db.VarChar(255)
+  descricao  String?
+  status     String    @default("DISPONIVEL") @db.VarChar(255)
+  created_at DateTime? @default(dbgenerated("'2025-08-07 17:12:13+00'::timestamp with time zone")) @db.Timestamptz(0)
+}
+
+model sessions {
+  id            String  @id @db.VarChar(255)
+  user_id       BigInt?
+  ip_address    String? @db.VarChar(45)
+  user_agent    String?
+  payload       String
+  last_activity Int
+
+  @@index([last_activity], map: "sessions_last_activity_index")
+  @@index([user_id], map: "sessions_user_id_index")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model usuarios {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email           String    @unique(map: "usuarios_email_unique") @db.VarChar(255)
+  senha_hash      String?   @db.VarChar(255)
+  tipo_pessoa     String    @db.VarChar(255)
+  tipo_documento  String    @db.VarChar(255)
+  nome            String    @db.VarChar(255)
+  telefone        String?   @db.VarChar(255)
+  data_nascimento DateTime? @db.Date
+  cpf             String?   @db.VarChar(255)
+  ativo           Boolean   @default(true)
+  grupo_id        String?   @db.Uuid
+  created_at      DateTime? @default(dbgenerated("'2025-08-07 17:12:13+00'::timestamp with time zone")) @db.Timestamptz(0)
+  updated_at      DateTime? @db.Timestamptz(0)
+  ultimo_login    DateTime? @db.Timestamptz(0)
+  imoveis         imoveis[]
+  grupos          grupos?   @relation(fields: [grupo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "usuarios_grupo_id_foreign")
+}
+
+model vagas_estacionamento {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model veiculos {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  placa      String    @unique(map: "veiculos_placa_unique") @db.VarChar(8)
+  modelo     String    @db.VarChar(100)
+  marca      String    @db.VarChar(50)
+  renavam    String    @unique(map: "veiculos_renavam_unique") @db.VarChar(11)
+  cor        String    @db.VarChar(30)
+  ano        Int
+  vaga       String?   @db.VarChar(10)
+  imovel_id  BigInt?
+  created_by BigInt?
+  updated_by BigInt?
+  status     String    @default("ativo") @db.VarChar(255)
+
+  @@index([imovel_id], map: "veiculos_imovel_id_index")
+  @@index([placa], map: "veiculos_placa_index")
+  @@index([status], map: "veiculos_status_index")
+}
