@@ -1,0 +1,205 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CondoFlow API",
+        "description": "API para gerenciamento de condomínios, imóveis e recursos. CondoFlow é uma plataforma completa para administração de condomínios.",
+        "contact": {
+            "name": "CondoFlow Support",
+            "email": "support@condoflow.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "API Server"
+        },
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/api/condominios": {
+            "get": {
+                "tags": [
+                    "Condomínios"
+                ],
+                "summary": "Listar condomínios",
+                "description": "Retorna uma lista de todos os condomínios cadastrados no sistema",
+                "operationId": "getCondominios",
+                "responses": {
+                    "200": {
+                        "description": "Lista de condomínios retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "nome": {
+                                                        "type": "string",
+                                                        "example": "Condomínio Exemplo"
+                                                    },
+                                                    "endereco": {
+                                                        "type": "string",
+                                                        "example": "Rua 1, 100"
+                                                    },
+                                                    "cidade": {
+                                                        "type": "string",
+                                                        "example": "São Paulo"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao buscar condomínios"
+                    }
+                }
+            }
+        },
+        "/api/condominios/{id}/imoveis": {
+            "get": {
+                "tags": [
+                    "Condomínios"
+                ],
+                "summary": "Listar imóveis do condomínio",
+                "description": "Retorna todos os imóveis pertencentes a um condomínio específico",
+                "operationId": "getCondominioImoveis",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do condomínio",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de imóveis retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "unidade": {
+                                                        "type": "string",
+                                                        "example": "101"
+                                                    },
+                                                    "bloco": {
+                                                        "type": "string",
+                                                        "example": "A"
+                                                    },
+                                                    "condominioId": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao buscar imóveis"
+                    }
+                }
+            }
+        },
+        "/api/sync-status": {
+            "get": {
+                "tags": [
+                    "Condomínios"
+                ],
+                "summary": "Status da sincronização",
+                "description": "Retorna o status da conexão com o banco de dados Prisma/Supabase",
+                "operationId": "getSyncStatus",
+                "responses": {
+                    "200": {
+                        "description": "Status da sincronização",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Prisma conectado ao Supabase"
+                                        },
+                                        "database_url": {
+                                            "type": "string",
+                                            "example": "host.db.supabase.co"
+                                        },
+                                        "prisma_schema": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Token de autenticação",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Condomínios",
+            "description": "Gerenciamento de condomínios"
+        }
+    ],
+    "security": [
+        {
+            "sanctum": []
+        }
+    ]
+}

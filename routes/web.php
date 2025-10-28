@@ -9,6 +9,19 @@ use App\Http\Controllers\ImovelController;
 use App\Http\Controllers\DatabaseTestController;
 use App\Http\Controllers\Auth\LoginController;
 
+// Documentação Swagger UI
+Route::get('/api/documentation', [\L5Swagger\Http\Controllers\SwaggerController::class, 'api'])
+    ->name('l5-swagger.default.docs')
+    ->middleware([\App\Http\Middleware\L5SwaggerMiddleware::class]);
+
+Route::get('/api/docs/api-docs.json', [\L5Swagger\Http\Controllers\SwaggerController::class, 'docs'])
+    ->name('l5-swagger.default.docs')
+    ->middleware([\App\Http\Middleware\L5SwaggerMiddleware::class]);
+
+Route::get('/api/docs', function () {
+    return redirect('/api/documentation');
+})->name('api.docs');
+
 // Redirecionar para o dashboard
 Route::get('/', function () {
     return redirect()->route('dashboard');
