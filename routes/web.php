@@ -47,16 +47,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/database-test', [DatabaseTestController::class, 'index'])->name('database.test');
 
     // Users CRUD
-    Route::resource('users', UserController::class);
+    Route::prefix('api/v1')->group(function () {
+        Route::resource('users', UserController::class);
 
-    // Veículos CRUD
-    Route::resource('veiculos', VeiculoController::class);
+        // Veículos CRUD
+        Route::resource('veiculos', VeiculoController::class);
 
-    // Imóveis CRUD
-    Route::resource('imoveis', ImovelController::class);
+        // Imóveis CRUD
+        Route::resource('imoveis', ImovelController::class);
 
-    // API Routes para Prisma/Supabase
-    Route::prefix('api')->group(function () {
+        // API Routes para Prisma/Supabase
         Route::get('/condominios', [CondominioController::class, 'index'])->name('api.condominios');
         Route::get('/condominios/{id}/imoveis', [CondominioController::class, 'imoveis'])->name('api.condominios.imoveis');
         Route::get('/sync-status', [CondominioController::class, 'syncStatus'])->name('api.sync.status');

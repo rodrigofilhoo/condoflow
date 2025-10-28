@@ -14,9 +14,15 @@ use Illuminate\Support\Str;
 class LoginController extends Controller
 {
     /**
-     * Mostrar o formulário de login.
+     * Formulário de login
      *
-     * @return \Illuminate\View\View
+     * @OA\Get(
+     *     path="/login",
+     *     operationId="showLoginForm",
+     *     tags={"Autenticação"},
+     *     summary="Formulário de login",
+     *     @OA\Response(response=200, description="Formulário exibido")
+     * )
      */
     public function showLoginForm()
     {
@@ -24,10 +30,23 @@ class LoginController extends Controller
     }
 
     /**
-     * Processar solicitação de login.
+     * Realizar login
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @OA\Post(
+     *     path="/login",
+     *     operationId="login",
+     *     tags={"Autenticação"},
+     *     summary="Efetuar login",
+     *     description="Envia código de 2FA por email",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="user@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(response=302, description="Redireciona para 2FA"),
+     *     @OA\Response(response=422, description="Email inválido")
+     * )
      */
     public function login(Request $request)
     {
@@ -50,9 +69,15 @@ class LoginController extends Controller
     }
 
     /**
-     * Mostrar o formulário para digitar o código de verificação.
+     * Formulário de 2FA
      *
-     * @return \Illuminate\View\View
+     * @OA\Get(
+     *     path="/2fa",
+     *     operationId="show2faForm",
+     *     tags={"Autenticação"},
+     *     summary="Formulário de código 2FA",
+     *     @OA\Response(response=200, description="Formulário exibido")
+     * )
      */
     public function show2faForm()
     {
@@ -60,10 +85,22 @@ class LoginController extends Controller
     }
 
     /**
-     * Verificar o código de 2FA.
+     * Verificar código 2FA
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @OA\Post(
+     *     path="/2fa",
+     *     operationId="verify2fa",
+     *     tags={"Autenticação"},
+     *     summary="Verificar código 2FA",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="two_factor_code", type="string", example="123456")
+     *         )
+     *     ),
+     *     @OA\Response(response=302, description="Redireciona para dashboard"),
+     *     @OA\Response(response=422, description="Código inválido")
+     * )
      */
     public function verify2fa(Request $request)
     {
@@ -111,9 +148,15 @@ class LoginController extends Controller
     }
 
     /**
-     * Reenviar o código de verificação.
+     * Reenviar código 2FA
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @OA\Get(
+     *     path="/2fa/resend",
+     *     operationId="resend2fa",
+     *     tags={"Autenticação"},
+     *     summary="Reenviar código 2FA",
+     *     @OA\Response(response=302, description="Código reenviado")
+     * )
      */
     public function resend()
     {
@@ -133,10 +176,16 @@ class LoginController extends Controller
     }
 
     /**
-     * Logout do usuário.
+     * Logout
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @OA\Post(
+     *     path="/logout",
+     *     operationId="logout",
+     *     tags={"Autenticação"},
+     *     summary="Fazer logout",
+     *     @OA\Response(response=302, description="Redirecionado para login"),
+     *     security={{"sanctum": {}}}
+     * )
      */
     public function logout(Request $request)
     {

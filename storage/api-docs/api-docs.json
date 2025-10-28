@@ -19,74 +19,165 @@
         }
     ],
     "paths": {
-        "/api/condominios": {
+        "/login": {
             "get": {
                 "tags": [
-                    "Condomínios"
+                    "Autenticação"
                 ],
-                "summary": "Listar condomínios",
-                "description": "Retorna uma lista de todos os condomínios cadastrados no sistema",
-                "operationId": "getCondominios",
+                "summary": "Formulário de login",
+                "description": "Formulário de login",
+                "operationId": "showLoginForm",
                 "responses": {
                     "200": {
-                        "description": "Lista de condomínios retornada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "nome": {
-                                                        "type": "string",
-                                                        "example": "Condomínio Exemplo"
-                                                    },
-                                                    "endereco": {
-                                                        "type": "string",
-                                                        "example": "Rua 1, 100"
-                                                    },
-                                                    "cidade": {
-                                                        "type": "string",
-                                                        "example": "São Paulo"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                        "description": "Formulário exibido"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Efetuar login",
+                "description": "Envia código de 2FA por email",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Redireciona para 2FA"
                     },
-                    "500": {
-                        "description": "Erro ao buscar condomínios"
+                    "422": {
+                        "description": "Email inválido"
                     }
                 }
             }
         },
-        "/api/condominios/{id}/imoveis": {
+        "/2fa": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Formulário de código 2FA",
+                "description": "Formulário de 2FA",
+                "operationId": "show2faForm",
+                "responses": {
+                    "200": {
+                        "description": "Formulário exibido"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Verificar código 2FA",
+                "description": "Verificar código 2FA",
+                "operationId": "verify2fa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "two_factor_code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Redireciona para dashboard"
+                    },
+                    "422": {
+                        "description": "Código inválido"
+                    }
+                }
+            }
+        },
+        "/2fa/resend": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Reenviar código 2FA",
+                "description": "Reenviar código 2FA",
+                "operationId": "resend2fa",
+                "responses": {
+                    "302": {
+                        "description": "Código reenviado"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Fazer logout",
+                "description": "Logout",
+                "operationId": "logout",
+                "responses": {
+                    "302": {
+                        "description": "Redirecionado para login"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/condominios": {
             "get": {
                 "tags": [
                     "Condomínios"
                 ],
-                "summary": "Listar imóveis do condomínio",
-                "description": "Retorna todos os imóveis pertencentes a um condomínio específico",
-                "operationId": "getCondominioImoveis",
+                "summary": "Listar condomínios (API)",
+                "operationId": "getApiCondominios",
+                "responses": {
+                    "200": {
+                        "description": "Lista de condomínios"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/condominios/{id}/imoveis": {
+            "get": {
+                "tags": [
+                    "Condomínios"
+                ],
+                "summary": "Listar imóveis de um condomínio (API)",
+                "operationId": "getApiCondominiosImoveis",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do condomínio",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -95,81 +186,726 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de imóveis retornada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "unidade": {
-                                                        "type": "string",
-                                                        "example": "101"
-                                                    },
-                                                    "bloco": {
-                                                        "type": "string",
-                                                        "example": "A"
-                                                    },
-                                                    "condominioId": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao buscar imóveis"
+                        "description": "Lista de imóveis"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
-        "/api/sync-status": {
+        "/api/v1/sync-status": {
             "get": {
                 "tags": [
                     "Condomínios"
                 ],
-                "summary": "Status da sincronização",
-                "description": "Retorna o status da conexão com o banco de dados Prisma/Supabase",
-                "operationId": "getSyncStatus",
+                "summary": "Status da sincronização (API)",
+                "operationId": "getApiSyncStatus",
                 "responses": {
                     "200": {
-                        "description": "Status da sincronização",
+                        "description": "Status da sincronização"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Listar usuários",
+                "operationId": "getUsersList",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Criar novo usuário",
+                "operationId": "postUsers",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "João Silva"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "joao@example.com"
+                                    },
+                                    "tipo_pessoa": {
+                                        "type": "string",
+                                        "enum": [
+                                            "FISICA",
+                                            "JURIDICA"
+                                        ]
+                                    },
+                                    "tipo_documento": {
+                                        "type": "string",
+                                        "enum": [
+                                            "CPF",
+                                            "CNPJ",
+                                            "RG"
+                                        ]
+                                    },
+                                    "cpf": {
+                                        "type": "string"
+                                    },
+                                    "telefone": {
+                                        "type": "string"
+                                    },
+                                    "data_nascimento": {
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/create": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Formulário de novo usuário",
+                "operationId": "getUsersCreate",
+                "responses": {
+                    "200": {
+                        "description": "Formulário exibido"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Detalhes do usuário",
+                "operationId": "getUsersShow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atualizar usuário",
+                "operationId": "putUsers",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Deletar usuário",
+                "operationId": "deleteUsers",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário deletado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{id}/edit": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Formulário de edição de usuário",
+                "operationId": "getUsersEdit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formulário exibido"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/veiculos": {
+            "get": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Listar veículos",
+                "operationId": "getVeiculosList",
+                "responses": {
+                    "200": {
+                        "description": "Lista de veículos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Criar novo veículo",
+                "operationId": "postVeiculos",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Veículo criado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/veiculos/create": {
+            "get": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Formulário de novo veículo",
+                "operationId": "getVeiculosCreate",
+                "responses": {
+                    "200": {
+                        "description": "Formulário exibido"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/veiculos/{id}": {
+            "get": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Detalhes do veículo",
+                "operationId": "getVeiculosShow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Atualizar veículo",
+                "operationId": "putVeiculos",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Veículo atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Deletar veículo",
+                "operationId": "deleteVeiculos",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo deletado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/veiculos/{id}/edit": {
+            "get": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Formulário de edição de veículo",
+                "operationId": "getVeiculosEdit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formulário exibido"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/imoveis": {
+            "get": {
+                "tags": [
+                    "Imóveis"
+                ],
+                "summary": "Listar imóveis",
+                "operationId": "getImoveisList",
+                "responses": {
+                    "200": {
+                        "description": "Lista de imóveis"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Imóveis"
+                ],
+                "summary": "Criar novo imóvel",
+                "operationId": "postImoveis",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Imóvel criado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/imoveis/create": {
+            "get": {
+                "tags": [
+                    "Imóveis"
+                ],
+                "summary": "Formulário de novo imóvel",
+                "operationId": "getImoveisCreate",
+                "responses": {
+                    "200": {
+                        "description": "Formulário exibido"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/imoveis/{id}": {
+            "get": {
+                "tags": [
+                    "Imóveis"
+                ],
+                "summary": "Detalhes do imóvel",
+                "operationId": "getImoveisShow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Imóvel encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Imóveis"
+                ],
+                "summary": "Atualizar imóvel",
+                "operationId": "putImoveis",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Imóvel atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Imóveis"
+                ],
+                "summary": "Deletar imóvel",
+                "operationId": "deleteImoveis",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Imóvel deletado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/imoveis/{id}/edit": {
+            "get": {
+                "tags": [
+                    "Imóveis"
+                ],
+                "summary": "Formulário de edição de imóvel",
+                "operationId": "getImoveisEdit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formulário exibido"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/dashboard": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Dashboard principal",
+                "description": "Exibe o painel principal da aplicação",
+                "operationId": "getDashboard",
+                "responses": {
+                    "200": {
+                        "description": "Dashboard renderizado com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/search": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Buscar recursos",
+                "description": "Realiza busca em usuários, imóveis, veículos e condomínios",
+                "operationId": "search",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Termo de busca",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resultados da busca"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/database-test": {
+            "get": {
+                "tags": [
+                    "Sistema"
+                ],
+                "summary": "Teste de conectividade com banco de dados",
+                "description": "Retorna informações sobre a conexão com o banco de dados e contagem de registros",
+                "operationId": "databaseTest",
+                "responses": {
+                    "200": {
+                        "description": "Informações do banco de dados",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
+                                        "connection": {
                                             "type": "string",
-                                            "example": "Prisma conectado ao Supabase"
+                                            "example": "PostgreSQL - Supabase"
                                         },
-                                        "database_url": {
-                                            "type": "string",
-                                            "example": "host.db.supabase.co"
+                                        "database": {
+                                            "type": "string"
                                         },
-                                        "prisma_schema": {
-                                            "type": "boolean",
-                                            "example": true
+                                        "host": {
+                                            "type": "string"
+                                        },
+                                        "counts": {
+                                            "properties": {
+                                                "usuarios": {
+                                                    "type": "integer"
+                                                },
+                                                "grupos": {
+                                                    "type": "integer"
+                                                },
+                                                "condominios": {
+                                                    "type": "integer"
+                                                },
+                                                "imoveis": {
+                                                    "type": "integer"
+                                                },
+                                                "veiculos": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -177,7 +913,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         }
     },
@@ -193,8 +934,32 @@
     },
     "tags": [
         {
+            "name": "Autenticação",
+            "description": "Endpoints de autenticação e login"
+        },
+        {
+            "name": "Usuários",
+            "description": "Operações com usuários do sistema"
+        },
+        {
             "name": "Condomínios",
             "description": "Gerenciamento de condomínios"
+        },
+        {
+            "name": "Veículos",
+            "description": "Gerenciamento de veículos residenciais"
+        },
+        {
+            "name": "Imóveis",
+            "description": "Imóveis"
+        },
+        {
+            "name": "Dashboard",
+            "description": "Dashboard"
+        },
+        {
+            "name": "Sistema",
+            "description": "Sistema"
         }
     ],
     "security": [

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class ImovelController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Listar imóveis
      */
     public function index()
     {
@@ -15,7 +15,7 @@ class ImovelController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Formulário de novo imóvel
      */
     public function create()
     {
@@ -23,7 +23,7 @@ class ImovelController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Criar imóvel
      */
     public function store(Request $request)
     {
@@ -32,7 +32,7 @@ class ImovelController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Detalhes do imóvel
      */
     public function show(string $id)
     {
@@ -40,7 +40,7 @@ class ImovelController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Formulário de edição
      */
     public function edit(string $id)
     {
@@ -48,7 +48,7 @@ class ImovelController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualizar imóvel
      */
     public function update(Request $request, string $id)
     {
@@ -57,7 +57,7 @@ class ImovelController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletar imóvel
      */
     public function destroy(string $id)
     {
