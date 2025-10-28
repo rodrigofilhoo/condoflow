@@ -1,7 +1,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
         <a class="sidebar-brand brand-logo" href="{{ route('dashboard') }}">
-            <img src="{{ asset('assets/images/logo.svg') }}" alt="logo" />
+            <h1 style="color: white; text-decoration: none;">Condoflow</h1>
         </a>
         <a class="sidebar-brand brand-logo-mini" href="{{ route('dashboard') }}">
             <img src="{{ asset('assets/images/logo-mini.svg') }}" alt="logo" />
@@ -16,7 +16,7 @@
                         <span class="count bg-success"></span>
                     </div>
                     <div class="profile-name">
-                        <h5 class="mb-0 font-weight-normal">Admin User</h5>
+                        <h5 class="mb-0 font-weight-normal">{{ Auth::check() ? Auth::user()->nome : 'Usuário desconhecido' }}</h5>
                         <span>Gold Member</span>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="preview-item-content">
-                            <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
+                            <p class="preview-subject ellipsis mb-1 text-small">Gerenciar conta</p>
                         </div>
                     </a>
                     <div class="dropdown-divider"></div>
@@ -52,14 +52,14 @@
                             </div>
                         </div>
                         <div class="preview-item-content">
-                            <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
+                            <p class="preview-subject ellipsis mb-1 text-small">To-do</p>
                         </div>
                     </a>
                 </div>
             </div>
         </li>
         <li class="nav-item nav-category">
-            <span class="nav-link">Navigation</span>
+            <span class="nav-link">Navegação</span>
         </li>
         <li class="nav-item menu-items">
             <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the users.
+     * Listar usuários
      */
     public function index()
     {
@@ -18,7 +18,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new user.
+     * Exibir formulário de criação
      */
     public function create()
     {
@@ -26,7 +26,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created user in storage.
+     * Criar usuário
      */
     public function store(Request $request)
     {
@@ -62,7 +62,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified user.
+     * Exibir usuário
      */
     public function show(User $user)
     {
@@ -70,7 +70,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified user.
+     * Exibir formulário de edição
      */
     public function edit(User $user)
     {
@@ -78,7 +78,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified user in storage.
+     * Atualizar usuário
      */
     public function update(Request $request, User $user)
     {
@@ -117,7 +117,7 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified user from storage.
+     * Deletar usuário
      */
     public function destroy(User $user)
     {

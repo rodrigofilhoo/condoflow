@@ -15,7 +15,7 @@ class CondominioController extends Controller
     }
 
     /**
-     * Display a listing of condominios.
+     * Listar todos os condomínios
      */
     public function index()
     {
@@ -35,7 +35,7 @@ class CondominioController extends Controller
     }
 
     /**
-     * Get imoveis by condominio ID.
+     * Obter imóveis de um condomínio
      */
     public function imoveis($condominioId)
     {
@@ -55,7 +55,7 @@ class CondominioController extends Controller
     }
 
     /**
-     * Show database sync status.
+     * Verificar status de sincronização
      */
     public function syncStatus()
     {

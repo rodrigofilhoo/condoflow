@@ -7,7 +7,101 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# CondoFlow
+
+Plataforma de gerenciamento de condomínios, imóveis e recursos.
+
+## 📚 Documentação da API - Swagger UI
+
+A API CondoFlow possui documentação interativa completa através do Swagger UI.
+
+### Acessar a Documentação
+
+Após iniciar o servidor, acesse:
+- **Swagger UI**: [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
+- **Alias curto**: [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
+
+### Recursos da Documentação
+
+A documentação inclui:
+
+- ✅ **Descrição de todos os endpoints** com exemplos de requisição e resposta
+- ✅ **Modelos de dados** (schemas) das entidades
+- ✅ **Autenticação** com tokens Bearer
+- ✅ **Testes interativos** direto na interface
+- ✅ **Exportação** em JSON e YAML
+- ✅ **Busca e filtro** de endpoints
+- ✅ **Modo escuro** habilitado por padrão
+
+### Endpoints Documentados
+
+#### Condomínios
+- `GET /api/condominios` - Listar todos os condomínios
+- `GET /api/condominios/{id}/imoveis` - Listar imóveis de um condomínio
+- `GET /api/sync-status` - Verificar status da sincronização com banco de dados
+
+#### Usuários
+- `GET /users` - Listar usuários (Web)
+- `POST /users` - Criar usuário (Web)
+- `GET /users/{id}` - Ver detalhes do usuário (Web)
+- `PUT /users/{id}` - Atualizar usuário (Web)
+- `DELETE /users/{id}` - Deletar usuário (Web)
+
+#### Veículos
+- CRUD completo de veículos residenciais
+
+#### Imóveis
+- CRUD completo de imóveis e propriedades
+
+### Adicionar Documentação a Novos Endpoints
+
+Para documentar um novo endpoint no Swagger, use anotações OpenAPI no controller:
+
+```php
+/**
+ * Descrição do endpoint
+ *
+ * @OA\Get(
+ *     path="/api/seu-endpoint",
+ *     operationId="operacaoUnica",
+ *     tags={"NomeDaTag"},
+ *     summary="Resumo curto",
+ *     description="Descrição detalhada",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Sucesso",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="id", type="integer")
+ *         )
+ *     )
+ * )
+ */
+public function seu_metodo()
+{
+    // implementação
+}
+```
+
+### Gerar Documentação
+
+Para regenerar a documentação após adicionar/modificar endpoints:
+
+```bash
+php artisan l5-swagger:generate
+```
+
+### Configuração
+
+A configuração do Swagger está em `config/l5-swagger.php` com as seguintes opções:
+- `generate_always` - Regenerar docs a cada requisição (development)
+- `dark_mode` - Modo escuro habilitado
+- `doc_expansion` - Expansão padrão de operações
+- `persist_authorization` - Manter tokens entre recarregamentos
+
+---
+
+## Configuração do Projeto
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
